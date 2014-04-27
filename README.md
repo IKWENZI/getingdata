@@ -22,8 +22,12 @@ The script run_analysis.R does the following:
 
 #LIBRARY/DEPENDENCIES:
 
-The script run_analysis.R is dependent on rshape2 library. If not already available, please download it from CRAN using the following: install.packages("rshape2") To import: library(rshape2)
-TO EXECUTE THE SCRIPT:
+The script run_analysis.R is dependent on rshape2 library. If not already available, please download it from CRAN using the following: 
+>install.packages("rshape2") 
+>To import: 
+>library(rshape2)
+
+#TO EXECUTE THE SCRIPT:
 
 Simply copy the script onto the working directory of R. Once copied run by sourcing the script:
 
