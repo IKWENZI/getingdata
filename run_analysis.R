@@ -72,7 +72,7 @@ tidyData<-cbind(subj,y,msd)
 #str(tidyData)
 names(tidyData)[2]<-paste("activity")
 names(tidyData)<-gsub("\\(|\\)", "", names(tidyData))
-write.table(tidyData,"tidyData.txt")
+#write.table(tidyData,"tidyData.txt")
 
 #Part V Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
 #----------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ library(reshape2)
 mtidyData<-melt(tidyData,id=c("subject","activity"))
 subjactmean<-dcast(mtidyData,subject+activity ~ variable,mean)
 View(subjactmean)
-write.csv(subjactmean, file= "tidyDataFinal.txt", row.names=FALSE)
+write.csv(subjactmean, file= "tidyData.txt", row.names=FALSE)
 
 # Program is done. Reset the c.w.d. to a directory above to point to original location
 #----------------------------------------------------------------------------------
