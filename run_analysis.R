@@ -51,7 +51,7 @@ feature<-read.table("features.txt", col.names=c("featureid", "featurename"))
 idx<-grep("-mean\\(\\)|-std\\(\\)", feature$featurename)
 names(X)<-feature[,2]
 msd<-X[,idx]
-str(msd)
+#str(msd)
 #> str(msd)
 #'data.frame':        10299 obs. of  66 variables:
 #        $ tBodyAcc-mean()-X          : num  0.257 0.286 0.275 0.27 0.275 ...
@@ -69,7 +69,7 @@ names(y) <- "activity"
 #Part IV Appropriately labels the data set with descriptive activity names. 
 #----------------------------------------------------------------------------------
 tidyData<-cbind(subj,y,msd)
-str(tidyData)
+#str(tidyData)
 names(tidyData)[2]<-paste("activity")
 names(tidyData)<-gsub("\\(|\\)", "", names(tidyData))
 write.table(tidyData,"tidyData.txt")
