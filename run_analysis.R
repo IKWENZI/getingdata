@@ -68,7 +68,6 @@ names(y) <- "activity"
 
 #Part IV Appropriately labels the data set with descriptive activity names. 
 #----------------------------------------------------------------------------------
-names(subj)<-"subject"
 tidyData<-cbind(subj,y,msd)
 str(tidyData)
 names(tidyData)[2]<-paste("activity")
@@ -86,3 +85,6 @@ write.csv(subjactmean, file= "tidyDataFinal.txt", row.names=FALSE)
 # Program is done. Reset the c.w.d. to a directory above to point to original location
 #----------------------------------------------------------------------------------
 setwd("..")
+
+
+
