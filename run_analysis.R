@@ -1,91 +1,61 @@
-#Part 0: Getting and Staging Data onto local Drives
-#--------------------------------------------------------------------
-#Download dataset if already not download
-if (!file.exists("dataset.zip")){
-#  URL of Dataset
-   fileURL<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-#  downloads the zipped file and renames it to something simple(dataset.zip)
-   download.file(fileURL,destfile="dataset.zip",method="curl")
-#  Date stamp the data downloaded
-   dateDownloaded<-date()
-}
+#This code works as along as UCI HAR Dataset folder is in the working directory
 
-#Unzip Dataset if already not unzipped
-if (!file.exists("./UCI HAR Dataset")){
-   #unzip the zipped file thats downloaded currently
-   unzip("~/dataset.zip")
-}
-
-#Finally setwd if already not set to directory "UCI Har Dataset" that was
-#extracted from dataset.zip in above stage
-wd<-getwd()
-
-if (!wd=="./UCI HAR Dataset"){
-  #After unzipping all datasets are obtainer under a directory called 
-  #"UCI HAR Dataset". Lets make this the current working directory to make
-  #all extracts easier
-  setwd("./UCI HAR Dataset")
-}
-
-#Part I Merges the training and the test sets to create one data set.
-#--------------------------------------------------------------------
-test_subj<-read.table("./test/subject_test.txt",col.names=c("subject"))
-train_subj<-read.table("./train/subject_train.txt",col.names=c("subject"))
-subj<-rbind(test_subj,train_subj)
-#Reference:
-#> str(subj)
-#'data.frame':        10299 obs. of  1 variable:
-#        $ V1: int  2 2 2 2 2 2 2 2 2 2 ...
-
-#similarly merge all test set (X_test.txt) and labels (y_test.txt)
-test_X<-read.table("./test/X_test.txt")
-train_X<-read.table("./train/X_train.txt")
-test_y<-read.table("./test/y_test.txt",col.names=c("activityid"))
-train_y<-read.table("./train/y_train.txt",col.names=c("activityid"))
-X<-rbind(test_X,train_X)
-y<-rbind(test_y,train_y)
-
-#Part II Extracts measurements on the mean and stdev for each measurement. 
-#----------------------------------------------------------------------------------
-feature<-read.table("features.txt", col.names=c("featureid", "featurename"))
-idx<-grep("-mean\\(\\)|-std\\(\\)", feature$featurename)
-names(X)<-feature[,2]
-X<-X[,idx]
-str(X)
-#> str(X)
-#'data.frame':        10299 obs. of  66 variables:
-#        $ tBodyAcc-mean()-X          : num  0.257 0.286 0.275 0.27 0.275 ...
-#$ tBodyAcc-mean()-Y          : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
-#$ tBodyAcc-mean()-Z          : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
+#This requires reshape2 package. Code was tested in Rstudio.
 
 
-#Part III Uses descriptive activity names to name the activities in the data set. 
-#----------------------------------------------------------------------------------
-act <- read.table("activity_labels.txt",col.names=c("activityid","activity"))
-merged<-merge(act,y,by="activityid")
-y<-merged$activity
-str(y)
+#Import X_train and X_Test data
 
-#Part IV Appropriately labels the data set with descriptive activity names. 
-#----------------------------------------------------------------------------------
-names(subj)<-"subject"
-tidyData<-cbind(subj,y,X)
-str(tidyData)
-names(tidyData)[2]<-paste("activity")
-names(tidyData)<-gsub("\\(|\\)", "", names(tidyData))
-write.table(tidyData,"tidyData.txt")
-
-#Part V Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
-#----------------------------------------------------------------------------------
-library(reshape2)
-mtidyData<-melt(tidyData,id=c("subject","activity"))
-subjactmean<-dcast(mtidyData,subject+activity ~ variable,mean)
-View(subjactmean)
-write.csv(subjactmean, file= "tidy_data2.txt", row.names=FALSE)
-
-# Program is done. Reset the c.w.d. to a directory above to point to original location
-#----------------------------------------------------------------------------------
-setwd("..")
+X_train_data <- read.table("UCI HAR Dataset/train/X_train.txt")
+X_test_data <- read.table("UCI HAR Dataset/test/X_test.txt")
+X_data <- rbind(X_test_data, X_train_data)
 
 
+#Import Y_train and Y_Test data
 
+Y_train_data <- read.table("UCI HAR Dataset/train/y_train.txt")
+Y_test_data <- read.table("UCI HAR Dataset/test/y_test.txt")
+Y_data <- rbind(Y_test_data, Y_train_data)
+
+
+#Import subject_train and subject_test data
+
+
+Sub_train <- read.table("UCI HAR Dataset/train/subject_train.txt")
+Sub_test <- read.table("UCI HAR Dataset/test/subject_test.txt")
+Sub_data <- rbind(Sub_train, Sub_test)
+
+
+#Import activities data and label Y_data file
+
+
+activities <- read.table("UCI HAR Dataset/activity_labels.txt")
+activities[, 2] = gsub("_", "", tolower(as.character(activities[, 2])))
+Y_data [,1] = activities[Y_data[,1], 2]
+names(Y_data) <- "activity"
+
+
+#Import features.txt file. Extracts only the measurements on the mean and standard deviation for each measurement.
+#Label the mean and std data set (X_data_m_s) dataset
+
+features <- read.table("UCI HAR Dataset/features.txt")
+m_s_features <- grep("-mean\\(\\)|-std\\(\\)", features[, 2])
+X_data_m_s<-X_data[,m_s_features]
+names(X_data_m_s)<-tolower(gsub("\\(|\\)", "", features[m_s_features, 2]))
+
+#Label sub_data and
+#combine the datasets to create the tidy data set
+#which is merged data of test and training data
+
+names(Sub_data) <- "subject"
+tidy_dataset_A <- cbind(Sub_data, Y_data, X_data_m_s)
+#write.table(tidy_dataset_A, "merged_tidy_data.txt")
+
+#Creates a second, independent tidy data set
+#with the average of each variable
+#for each activity and each subject.
+
+require(reshape2)
+m_data <- melt(tidy_dataset_A, id=c("subject","activity"))
+tidy_avg_data <- dcast(m_data, formula = subject + activity ~ variable, mean)
+#write.table(tidy_avg_data, "dataset_with_averages.txt")
+View(tidy_avg_data)
