@@ -24,7 +24,8 @@ The script run_analysis.R does the following:
 
 The script run_analysis.R is dependent on rshape2 library. If not already available, please download it from CRAN using the following: 
 >install.packages("rshape2") 
->To import: 
+
+To import: 
 >library(rshape2)
 
 #TO EXECUTE THE SCRIPT:
