@@ -119,4 +119,18 @@ The following are the columns of this dataset:
  fBodyBodyGyroJerkMag-mean
  fBodyBodyGyroJerkMag-std
 
+TRANSFORMATIONS:
+-------------------------------------------------------------
+> Step 0: This is a data prep stage. The data is downloaded from internet and saved in working directory in a file called: dataset.zip. This data is further extracted into the current working directory under a directory called : "UCI HAR Dataset" . We then reset the working directory to this directory for the duration of program.
 
+> Step 1: Merges all training set into one dataset. The data in training set is read under ./train directory and the data in test set is read from ./test. rbind function is used to merge data. 
+
+> Step 2: Read features.txt file and extract measurements  on the mean and stdev for each measurement. The resulting dataframe from this transformation stage is of 10299 observations and 66 variables.
+
+> Step 3: Read activity_labels.txt and use activity names to name the activities in the data set. 
+
+> Step 4: Appropriately  label the data set with descriptive activity names. gsub is used to remove brackets ("(" and ")") to clean column names.
+
+> Step 5: Finally create a second, independent tidy data set with the average of each variable for each activity and each subject. This tidy dataset is a dataset containing 180 observations of 68 variables. See section "OUTPUT DATASET" above for more details.
+
+> Step 6: Reset back the current working directory to the state it was before the begining on the program.
