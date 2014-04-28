@@ -119,3 +119,4 @@ The following are the columns of this dataset:
  fBodyBodyGyroJerkMag-mean
  fBodyBodyGyroJerkMag-std
 
+
