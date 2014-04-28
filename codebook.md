@@ -41,6 +41,7 @@ This is a dataset containing 180 observations of 68 variables.
 The following are the columns of this dataset:
 
 >subject - the person of interest (30 total subjects)
+
 >activity - the activity name describing one of the following 6 activites:
 >            1 WALKING
 >            2 WALKING_UPSTAIRS
@@ -51,7 +52,7 @@ The following are the columns of this dataset:
 
 >And the following 66 columns(in addition to above) describing the extracted measurements on the mean and standard deviation for each measurement. 
 
-< tBodyAcc-mean-X
+> tBodyAcc-mean-X
  tBodyAcc-mean-Y
  tBodyAcc-mean-Z
  tBodyAcc-std-X
